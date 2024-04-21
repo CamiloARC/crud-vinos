@@ -33,9 +33,9 @@ Este proyecto es una aplicación CRUD (Create, Read, Update, Delete) para la ges
 
 ## Instalación
 
-1. Clona el repositorio
+1. Clona el repositorio.
 
-2. Instala las dependencias:
+2. Instala las dependencias.
 
 3. Configura la conexión a la base de datos en el archivo correspondiente.
 
