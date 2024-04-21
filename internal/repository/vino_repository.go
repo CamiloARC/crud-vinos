@@ -3,6 +3,8 @@ package repository
 import (
 	"crud_vinos/internal/models"
 	"database/sql"
+	"encoding/json"
+	"io"
 )
 
 func ObtenerVinoPorID(db *sql.DB, id string) (*models.Vino, error) {
@@ -10,7 +12,10 @@ func ObtenerVinoPorID(db *sql.DB, id string) (*models.Vino, error) {
 	row := db.QueryRow(query, id)
 
 	var vino models.Vino
-	if err := row.Scan(&vino.ID, &vino.Nombre, &vino.Uva, &vino.Pais); err != nil {
+	err := row.Scan(&vino.ID, &vino.Nombre, &vino.Uva, &vino.Pais)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 	return &vino, nil
@@ -32,4 +37,20 @@ func ObtenerTodosLosVinos(db *sql.DB) ([]models.Vino, error) {
 		vinos = append(vinos, vino)
 	}
 	return vinos, nil
+}
+
+func CrearVino(db *sql.DB, body io.ReadCloser) (*models.Vino, error) {
+	var vino models.Vino
+	var result sql.Result
+	if err := json.NewDecoder(body).Decode(&vino); err != nil {
+		return nil, err
+	}
+	query := "INSERT INTO vinos (nombre, uva, pais) VALUES (?, ?, ?)"
+	result, err := db.Exec(query, vino.Nombre, vino.Uva, vino.Pais)
+	if err != nil {
+		return nil, err
+	}
+	id, _ := result.LastInsertId()
+	vino.ID = int(id)
+	return &vino, nil
 }
