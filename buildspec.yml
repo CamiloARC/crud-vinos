@@ -1,33 +1,33 @@
 version: 0.2
 
+env:
+  variables:
+    GO111MODULE: "on"
+    GO_VERSION: 1.22.2
+
 phases:
   install:
-    #Si utiliza la imagen estándar de Ubuntu 2.0 o posterior, debe especificar las versiones del tiempo de ejecución.
-    #Si especifica las versiones del tiempo de ejecución y utiliza una imagen que no sea la estándar de Ubuntu 2.0, se produce un error en la compilación.
     runtime-versions:
-      java: corretto11
-
+      golang: $GO_VERSION
+    commands:
+      - echo "Instalando dependencias de Go..."
+      - go get -v ./...
+  pre_build:
+    commands:
+      - echo "Ejecutando pruebas unitarias..."
+      - go test ./internal/repository -coverprofile=coverage-report
+      - go tool cover -html coverage-report -o coverage-report.html
   build:
     commands:
-      - mvn compile
-      - mvn test
-      - mvn install
-      # - command
-  post_build:
-    commands:
-      - mvn package
-      - mv target/protobootapp-0.0.1-SNAPSHOT.jar root.jar
-      # - command
+      - echo "Construyendo proyecto..."
+      - go mod tidy
+      - go build -C ./cmd/app/ -o ../../bin/app
 reports:
-  jacoco-report:
+  coverage-report:
     files:
-      - 'target/site/jacoco/jacoco.xml'
-    file-format: 'JACOCOXML'
-  junit-report:
-    files:
-      - 'target/surefire-reports/*.xml'
-    file-format: 'JUNITXML'
+      - './coverage-report.html'
+    file-format: 'HTML'
 
 artifacts:
   files:
-    - root.jar
+    - bin/app

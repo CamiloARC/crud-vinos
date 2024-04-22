@@ -1,1 +1,4 @@
 .env
+coverage-report
+coverage-report.html
+bin/*

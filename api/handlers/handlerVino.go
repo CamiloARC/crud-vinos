@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"crud_vinos/internal/database"
+	"crud_vinos/internal/models"
 	"crud_vinos/internal/repository"
 	"encoding/json"
 	"net/http"
@@ -16,39 +17,33 @@ func HandlerVino(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		// Lógica para obtener vinos
 		if id := r.URL.Query().Get("id"); id != "" {
-			// Obtener un vino específico por ID
 			vino, err := repository.ObtenerVinoPorID(&db, id)
 			if err != nil {
 				http.Error(w, "Error al buscar el vino", http.StatusInternalServerError)
 				return
-			} else if vino == nil {
-				json.NewEncoder(w).Encode(map[string]interface{}{})
-				return
 			}
 			json.NewEncoder(w).Encode(vino)
 		} else {
-			// Obtener todos los vinos
 			vinos, err := repository.ObtenerTodosLosVinos(&db)
 			if err != nil {
 				http.Error(w, "Error al obtener vinos", http.StatusInternalServerError)
-				return
-			} else if vinos == nil {
-				json.NewEncoder(w).Encode([]interface{}{})
 				return
 			}
 			json.NewEncoder(w).Encode(vinos)
 		}
 	case "POST":
-		// Lógica para crear un vino
-
-		vino, err := repository.CrearVino(&db, r.Body)
+		var vino models.Vino
+		if err := json.NewDecoder(r.Body).Decode(&vino); err != nil {
+			http.Error(w, "Datos inválidos", http.StatusBadRequest)
+			return
+		}
+		resp, err := repository.CrearVino(&db, &vino)
 		if err != nil {
 			http.Error(w, "Error al crear vino", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(vino)
+		json.NewEncoder(w).Encode(resp)
 	default:
 		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 	}
