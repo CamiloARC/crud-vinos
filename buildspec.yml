@@ -23,7 +23,7 @@ phases:
   build:
     commands:
       - echo "Construyendo proyecto..."
-      - go build -C ./cmd/app/ -o ../../application 
+      - go build -C ./cmd/app/ -o ../../application.go 
   # post-build:
   #   commands:
 reports:
@@ -33,8 +33,8 @@ reports:
     file-format: 'HTML'
   junit-report:
     files:
-      - 'report.xml'
+      - 'reports/report.xml'
     file-format: 'JUNITXML'
 artifacts:
   files:
-    - application
+    - application.go
