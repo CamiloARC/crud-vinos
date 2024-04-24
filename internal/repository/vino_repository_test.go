@@ -21,7 +21,7 @@ func TestObtenerVinoPorID(t *testing.T) {
 
 	// Configura la respuesta que esperas de la consulta
 	rows := sqlmock.NewRows([]string{"id", "nombre", "uva", "pais"}).
-		AddRow(id, "Fronter", "Cabernet", "Chile")
+		AddRow(id, "Frontera", "Cabernet", "Chile")
 
 	// Espera que se ejecute la consulta con el ID proporcionado y responde con las filas definidas
 	mock.ExpectQuery(query).
@@ -51,6 +51,15 @@ func TestObtenerVinoPorID(t *testing.T) {
 				Pais:   "Chile",
 			},
 			wantErr: false,
+		},
+		{
+			name: "Caso de prueba 2: Obtener vino con ID NO existente",
+			args: args{
+				db: db,
+				id: "2",
+			},
+			want:    nil,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {

@@ -15,13 +15,12 @@ phases:
       - go get -v ./...
   pre_build:
     commands:
-      - echo "Ejecutando pruebas unitarias..."
+      - echo "Ejecutando pruebas integracion..."
       - go test ./internal/repository -coverprofile=coverage-report
       - go tool cover -html coverage-report -o coverage-report.html
   build:
     commands:
       - echo "Construyendo proyecto..."
-      - go mod tidy
       - go build -C ./cmd/app/ -o ../../bin/app
 reports:
   coverage-report:
