@@ -23,7 +23,8 @@ phases:
   build:
     commands:
       - echo "Construyendo proyecto..."
-      - GOARCH=amd64 GOOS=linux go build -C ./cmd/app/ -o ../../application
+      # - GOARCH=amd64 GOOS=linux go build -C ./cmd/app/ -o ../../application.exe
+      - go build -C ./cmd/app/ -o ../../application.exe
   # post-build:
   #   commands:
 reports:
@@ -37,4 +38,4 @@ reports:
     file-format: 'JUNITXML'
 artifacts:
   files:
-    - application
+    - application.exe
