@@ -16,18 +16,25 @@ phases:
   pre_build:
     commands:
       - echo "Ejecutando pruebas integracion..."
-      - go test ./internal/repository -coverprofile=coverage-report
-      - go tool cover -html coverage-report -o coverage-report.html
+      - go test ./internal/repository -coverprofile=reports/coverage-report
+      - go tool cover -html reports/coverage-report -o reports/coverage-report.html
+      - go install github.com/jstemmer/go-junit-report/v2@latest
+      - go test -v 2>&1 ./internal/repository | go-junit-report -set-exit-code > reports/report.xml
   build:
     commands:
       - echo "Construyendo proyecto..."
       - go build -C ./cmd/app/ -o ../../bin/application 
+  # post-build:
+  #   commands:
 reports:
   coverage-report:
     files:
-      - './coverage-report.html'
+      - 'coverage-report.html'
     file-format: 'HTML'
-
+  junit-report:
+    files:
+      - 'report.xml'
+    file-format: 'JUNITXML'
 artifacts:
   files:
     - bin/application
