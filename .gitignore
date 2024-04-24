@@ -1,5 +1,1 @@
 .env
-bin/*
-!bin/
-reports/*
-!reports/
