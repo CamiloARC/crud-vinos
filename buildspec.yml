@@ -16,8 +16,8 @@ phases:
   pre_build:
     commands:
       - echo "Ejecutando pruebas integracion..."
-      - go test ./internal/repository -coverprofile=reports/coverage-report
-      - go tool cover -html reports/coverage-report -o reports/coverage-report.html
+      - go test ./internal/repository -coverprofile=coverage-report
+      - go tool cover -html coverage-report -o coverage-report.html
       - go install github.com/jstemmer/go-junit-report/v2@latest
       - go test -v 2>&1 ./internal/repository | go-junit-report -set-exit-code > reports/report.xml
   build:
