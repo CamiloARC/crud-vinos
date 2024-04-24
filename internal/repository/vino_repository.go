@@ -20,7 +20,7 @@ func ObtenerVinoPorID(db *sql.DB, id string) (*models.Vino, error) {
 }
 
 func ObtenerTodosLosVinos(db *sql.DB) ([]models.Vino, error) {
-	rows, err := db.Query("SELECT id, nombre, uva, pais FROM vinos")
+	rows, err := db.Query("SELECT id, nombre, uva, pais FROM vinos ")
 	if err != nil {
 		return nil, err
 	}
