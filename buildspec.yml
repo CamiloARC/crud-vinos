@@ -21,7 +21,7 @@ phases:
   build:
     commands:
       - echo "Construyendo proyecto..."
-      - go build -C ./cmd/app/ -o ../../bin/app
+      - go build -C ./cmd/app/ -o ../../bin/application.go
 reports:
   coverage-report:
     files:
@@ -30,4 +30,4 @@ reports:
 
 artifacts:
   files:
-    - bin/app
+    - bin/application.go
